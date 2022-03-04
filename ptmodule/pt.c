@@ -394,7 +394,7 @@ static struct vm_area_struct * find_bintext_vma(pt_manager_t *ptm, struct task_s
 			if((vma->vm_flags & VM_EXEC)  &&  vma->vm_file){
 				path = dentry_path_raw(vma->vm_file->f_path.dentry, binpath, PMAX);
 
-				tpath = kbasename(ptm->target_path);	
+				tpath = (char *)kbasename(ptm->target_path);	
 
 				if(path && strstr(path, tpath))
 					return vma; 
@@ -830,9 +830,14 @@ static void process_next_msg(char *msg_recvd, char*msg_send){
     siginfo_t sgt;
     int (*force_sig_info)(int sig, struct siginfo *info, struct task_struct *t);
     pt_manager_t *ptm;
+		int ret;
 
     coff = 0;
-    kstrtoull(strstr(msg_recvd, DEM)+1, 16, &coff);
+    ret = kstrtoull(strstr(msg_recvd, DEM)+1, 16, &coff);
+		if (ret) {
+			printk("kstrtoull() failed: %d\n", ret);
+			return;
+		}
     printk("Received next message %s and %llx\n", msg_recvd, coff);
 
     force_sig_info = proxy_find_symbol("force_sig_info");	
@@ -985,6 +990,7 @@ static void pt_recv_msg(struct sk_buff *skb) {
 }
 
 
+#if 0
 //Process PMI interrupt when PT buffer is full
 static int pt_nmi_handler(unsigned int cmd, struct pt_regs *regs)
 {
@@ -1040,6 +1046,7 @@ void unregister_pmi_handler(void){
 	else
 		printk(KERN_INFO "unregister_nmi_handler is null\n");
 }
+#endif
 
 
 
