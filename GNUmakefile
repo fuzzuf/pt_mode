@@ -23,7 +23,6 @@ all: build
 
 build:
 	$(MAKE) -C $(PT_PROXY)
-	cp $(PT_PROXY)/pt-proxy-fast ../pt-proxy-fast
 	cd $(PT_MODULE) && \
 		$(MAKE)
 
