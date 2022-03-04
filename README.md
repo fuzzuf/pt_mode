@@ -16,17 +16,17 @@ This make command will build `ptmodule/ptmodule.ko`, `pt_proxy/afl-pt-proxy` and
 
 ### Patch COTS Binary
 
-The proxy application only supports fork server mode, which requires patchelf and the patched glibc. The dependency build can be done by just run:
+The proxy application only supports fork server mode, which requires patchelf and the patched glibc. The below make command builds the dependency build:
 
 ```shell
 make patch TARGET=$BIN
 ```
 
-The above make command builds and install the dependencies to `$PREFIX` (default to `$PWD/.local`) at the first time. Then, it runs `patchelf` to `$BIN` with output `$OUTPUT` (`$BIN.patched` by default).
+The above command builds and installs the dependencies to `$PREFIX` (default to `$PWD/.local`) for the first time. Then, it runs `patchelf` to `$BIN` with output `$OUTPUT` (`$BIN.patched` by default).
 
 ### Install `ptmodule.ko`
 
-The proxy application requires target environment to the `ptmodule.ko` installed:
+The proxy application requires the target environment to the `ptmodule.ko` installed:
 
 ```shell
 cd ptmodule
@@ -35,4 +35,4 @@ cd ptmodule
 
 ## License
 
-This repository is released under the [GNU General Public License v3.0](/LICENSE). Some part of the external source code are licensed under their own licenses.
+This repository is released under the [GNU General Public License v3.0](/LICENSE). Some parts of the external source code are licensed under their own licenses.
