@@ -2,7 +2,7 @@
   https://www.microsoft.com/en-us/research/wp-content/uploads/2017/01/griffin-asplos17.pdf
   with some customization
 */
-#include "../../include/types.h"
+#include "include/types.h"
 #include <fcntl.h>
 #include <string.h>
 #include <stdio.h>

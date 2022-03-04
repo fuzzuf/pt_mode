@@ -16,10 +16,10 @@
 #include <libgen.h>
 #include <ctype.h>
 
-#include "../../include/config.h"
-#include "../../include/types.h"
-#include "../../include/debug.h"
-#include "../../include/alloc-inl.h"
+#include "include/config.h"
+#include "include/types.h"
+#include "include/debug.h"
+#include "include/alloc-inl.h"
 #include "pt_proxy.h"
 #include "pt_parser.h"
 
