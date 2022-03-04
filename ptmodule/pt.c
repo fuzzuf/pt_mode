@@ -109,6 +109,7 @@ netlink_t nlt ={
 };
 
 
+int current_cpu_id = -1;
 pt_factory_t *pt_factory;
 struct hrtimer hr_timers[NR_CPUS];//per-cpu timer obj
 u64 prev_timer_intervals[NR_CPUS] = {//for recording the last used interval instead of using the default one when ptm is not found.
@@ -531,12 +532,12 @@ enum hrtimer_restart pt_hrtimer_callback( struct hrtimer *timer ){
     }
 
     ktime = ktime_set(0, ptm->timer_interval); //measure is ns
-    prev_timer_intervals[smp_processor_id()] = ptm->timer_interval;//update prev timer interval
+    prev_timer_intervals[current_cpu_id] = ptm->timer_interval;//update prev timer interval
   }else{
-    ktime = ktime_set(0, prev_timer_intervals[smp_processor_id()]); //set as prev interval to avoid glitch
+    ktime = ktime_set(0, prev_timer_intervals[current_cpu_id]); //set as prev interval to avoid glitch
   }
   currtime = ktime_get();
-  hrtimer_forward(&(hr_timers[smp_processor_id()]), currtime, ktime);
+  hrtimer_forward(&(hr_timers[current_cpu_id]), currtime, ktime);
 
   preempt_enable();
   return HRTIMER_RESTART;
@@ -558,8 +559,9 @@ static void probe_trace_exec(void * arg, struct task_struct *p, pid_t old_pid, s
       ptm->fserver_pid = p->pid;	
       ptm->p_stat = PTARGET; 		
 
-      printk("The CPU ID for fork server is %d\n", smp_processor_id());
-      START_TIMER(hr_timers[smp_processor_id()]);
+			current_cpu_id = smp_processor_id();
+      printk("The CPU ID for fork server is %d\n", current_cpu_id);
+      START_TIMER(hr_timers[current_cpu_id]);
     }
   }
 
@@ -697,7 +699,7 @@ static void probe_trace_exit(void * ignore, struct task_struct *tsk){
 		}
 		
 		printk(KERN_INFO "In total %lx runs\n", (unsigned long)ptm->run_cnt);
-    hrtimer_try_to_cancel(&(hr_timers[smp_processor_id()]));
+    hrtimer_try_to_cancel(&(hr_timers[current_cpu_id]));
 
 		//reset target number
 		ptm->run_cnt = 0;
