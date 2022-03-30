@@ -694,6 +694,10 @@ int main(int argc, char *argv[])
 
   setenv("__AFLPT_ENABLE", "1", 0);
 
+#ifdef HAVE_AFFINITY
+  bind_to_free_core();
+#endif
+
   /* initialize netlink communication channel */
   netlink_init();
 

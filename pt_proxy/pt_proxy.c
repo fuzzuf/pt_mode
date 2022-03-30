@@ -679,6 +679,10 @@ int main(int argc, char *argv[])
   target_path = new_argv[0];
 
 
+#ifdef HAVE_AFFINITY
+  bind_to_free_core();
+#endif
+
   /* initialize netlink communication channel */
   netlink_init();
 
